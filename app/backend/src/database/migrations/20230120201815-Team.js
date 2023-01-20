@@ -10,8 +10,9 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-     teamName: {
-       type: Sequelize.STRING,
+     team_name: {
+       type: Sequelize.STRING(100),
+       allowNull: false,
      },
    });
   },
