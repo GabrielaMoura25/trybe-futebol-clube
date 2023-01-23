@@ -28,6 +28,10 @@ User.init({
     type: STRING(100),
     allowNull: false,
   },
+  password: {
+    type: STRING(100),
+    allowNull: false,
+  },
 }, {
   underscored: true,
   sequelize: db,
