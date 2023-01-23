@@ -10,7 +10,6 @@ export default class UserService {
     const findUser = await this._model.findOne(user.email);
 
     if (!findUser) return { code: 401, message: 'Incorrect email or password' };
-    console.log('finduser', findUser.password);
 
     const passEncript = Bcrypt.compare(user.password, findUser.password);
 

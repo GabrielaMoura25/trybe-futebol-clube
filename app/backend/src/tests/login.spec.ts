@@ -19,7 +19,7 @@ const { expect } = chai;
 
 describe('Testa o método POST na rota /login', () => {
 
-  let response: Response;
+  // let response: Response;
 
   afterEach(function() { sinon.restore() });
 
@@ -53,5 +53,29 @@ describe('Testa o método POST na rota /login', () => {
 
     expect(response.status).to.be.equal(401);
     expect(response.body).to.be.deep.equal({ message: 'Incorrect email or password' });
+  });
+
+  it('Usuário não informa o campo "email"', async () => {
+    const response = await chai
+            .request(app)
+            .post('/login')
+            .send({
+              password: 'secret_admin'
+            });
+
+    expect(response.status).to.be.equal(400);
+    expect(response.body).to.be.deep.equal({ message: 'All fields must be filled' });
+  });
+
+  it('Usuário não informa o campo "password"', async () => {
+    const response = await chai
+            .request(app)
+            .post('/login')
+            .send({
+              email: 'admin@admin.com',
+            });
+
+    expect(response.status).to.be.equal(400);
+    expect(response.body).to.be.deep.equal({ message: 'All fields must be filled' });
   });
 });
