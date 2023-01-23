@@ -28,6 +28,7 @@ module.exports = {
       },
       away_team_goals: {
         type: Sequelize.INTEGER,
+        allowNull: false,
 
       },
       in_progress: {
