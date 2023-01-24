@@ -12,9 +12,6 @@ export default class TeamController {
 
   getTeam = async (req: Request, res: Response) => {
     const { id } = req.params;
-    console.log('IDDDDD', id);
-
-    // const numberId = Number(id);
 
     const { code, response } = await this._service.getTeam(id);
 
