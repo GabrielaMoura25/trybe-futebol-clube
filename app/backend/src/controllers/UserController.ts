@@ -3,12 +3,12 @@ import ILogin from '../interfaces/ILogin';
 import UserService from '../services/UserService';
 
 export default class UserController {
-  constructor(private _model = new UserService()) {}
+  constructor(private _service = new UserService()) {}
 
   login = async (req: Request, res: Response) => {
     const user = req.body as ILogin;
 
-    const { code, message, token } = await this._model.login(user);
+    const { code, message, token } = await this._service.login(user);
 
     if (message) return res.status(code).json({ message });
 
@@ -18,7 +18,7 @@ export default class UserController {
   validateLogin = async (req: Request, res: Response) => {
     const { authorization } = req.headers;
 
-    const { code, message, role } = await this._model.validateLogin(authorization);
+    const { code, message, role } = await this._service.validateLogin(authorization);
 
     if (message) return res.status(code).json({ message });
 
