@@ -6,7 +6,7 @@ const router = express.Router();
 
 const controller = new UserController();
 
-router.post('/login', UserMidd, controller.login.bind(controller));
-router.get('/login/validate', controller.validateLogin.bind(controller));
+router.post('/', UserMidd, controller.login.bind(controller));
+router.get('/validate', controller.validateLogin.bind(controller));
 
 export default router;
