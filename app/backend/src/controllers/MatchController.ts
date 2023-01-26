@@ -20,9 +20,17 @@ export default class MatchController {
     return res.status(code).json(message);
   };
 
+  matchOver = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { code, message } = await this._service.matchOver(id);
+    return res.status(code).json(message);
+  };
+
   update = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { code, message } = await this._service.update(id);
-    return res.status(code).json(message);
+    const { body } = req;
+    const { code, message } = await this._service.update(id, body);
+
+    return res.status(code).json({ message });
   };
 }

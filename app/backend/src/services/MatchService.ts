@@ -32,8 +32,16 @@ export default class MatchService {
     return { code: 201, message: matchSave };
   };
 
-  update = async (id: string) => {
+  matchOver = async (id: string) => {
     await this._model.update({ inProgress: false }, { where: { id } });
     return { code: 200, message: 'Finished' };
+  };
+
+  update = async (id: string, match: IMatches) => {
+    await this._model.update(
+      { homeTeamGoals: match.homeTeamGoals, awayTeamGoals: match.awayTeamGoals },
+      { where: { id } },
+    );
+    return { code: 200, message: 'Match is updated!' };
   };
 }
