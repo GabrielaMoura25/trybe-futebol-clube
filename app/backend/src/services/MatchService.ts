@@ -1,5 +1,7 @@
 import Team from '../database/models/Team';
 import Match from '../database/models/Match';
+import IMatches from '../interfaces/IMatches';
+// import TokenConfig from '../utils/TokenConfig';
 
 export default class MatchService {
   constructor(private _model = Match) {}
@@ -14,6 +16,24 @@ export default class MatchService {
       ],
     });
 
-    return { code: 200, response: matches };
+    return { code: 200, message: matches };
+  };
+
+  saveMatch = async (match: IMatches) => {
+    const verifyTeamsIds = match.homeTeamId === match.awayTeamId;
+    if (verifyTeamsIds) {
+      return {
+        code: 422, message: 'It is not possible to create a match with two equal teams' };
+    }
+    const homeTeam = await Team.findByPk(match.homeTeamId);
+    const awayTeam = await Team.findByPk(match.awayTeamId);
+    if (!homeTeam || !awayTeam) return { code: 404, message: 'There is no team with such id!' };
+    const matchSave = await this._model.create({ ...match, inProgress: true });
+    return { code: 201, message: matchSave };
+  };
+
+  update = async (id: string) => {
+    await this._model.update({ inProgress: false }, { where: { id } });
+    return { code: 200, message: 'Finished' };
   };
 }

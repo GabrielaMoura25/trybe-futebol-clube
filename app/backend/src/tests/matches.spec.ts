@@ -27,4 +27,36 @@ describe('Testa a rota /matches', () => {
       expect(response.body).to.be.deep.equal(matchesMock);
     })
   })
+
+  describe('Testa método GET na rota /matches?inProgress=true', () => {
+    it('Obtenção de todas as partidas que estão em progresso', async () => {
+
+      const matchesInProgress = matchesMock.filter((match) => match.inProgress === true);
+
+      sinon.stub(Match, "findAll").resolves(matchesInProgress as unknown as Match[]);
+
+      const response = await chai
+              .request(app)
+              .get('/matches?inProgress=true');
+
+
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.be.deep.equal(matchesInProgress);
+    });
+
+    it('Obtenção de todas as partidas que estão finalizadas', async () => {
+
+      const matchesFinished = matchesMock.filter((match) => match.inProgress === false);
+
+      sinon.stub(Match, "findAll").resolves(matchesFinished as unknown as Match[]);
+
+      const response = await chai
+              .request(app)
+              .get('/matches?inProgress=false');
+
+
+      expect(response.status).to.be.equal(200);
+      expect(response.body).to.be.deep.equal(matchesFinished);
+    });
+  });
 })

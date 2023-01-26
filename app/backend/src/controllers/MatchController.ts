@@ -6,8 +6,23 @@ export default class MatchController {
 
   getMatches = async (req: Request, res: Response) => {
     const { inProgress } = req.query;
-    const { code, response } = await this._service.getMatches(inProgress as unknown as string);
+    const { code, message } = await this._service.getMatches(inProgress as unknown as string);
 
-    return res.status(code).json(response);
+    return res.status(code).json(message);
+  };
+
+  saveMatch = async (req: Request, res: Response) => {
+    const match = req.body;
+    const { code, message } = await this._service.saveMatch(match);
+    if (code === 422 || code === 404) {
+      return res.status(code).json({ message });
+    }
+    return res.status(code).json(message);
+  };
+
+  update = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { code, message } = await this._service.update(id);
+    return res.status(code).json(message);
   };
 }
