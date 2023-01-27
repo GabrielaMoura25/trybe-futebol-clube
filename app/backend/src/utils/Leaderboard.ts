@@ -4,19 +4,19 @@ import ILeaderboard, { IResult } from '../interfaces/ILeaderboard';
 export default class CreateLeaderboard {
   private static _createBoard(match: IResult): ILeaderboard {
     let game: IMatches[] = [];
-    if (match.awayGame) game = match.awayGame;
-    if (match.homeGame) game = match.homeGame;
+    if (match.awayGame) game = match.awayGame as unknown as IMatches[];
+    if (match.homeGame) game = match.homeGame as unknown as IMatches[];
 
-    const score = this.TotalScore(game);
-    const eff = this.TotalEfficiency(this.TotalPoints(game), game.length);
+    const score = this.TotalScore(game, match);
+    const eff = this.TotalEfficiency(this.TotalPoints(game, match), game.length);
 
     const board = {
       name: match.teamName,
-      totalPoints: this.TotalPoints(game),
+      totalPoints: this.TotalPoints(game, match),
       totalGames: game.length,
-      totalVictories: this.TotalVictories(game),
+      totalVictories: this.TotalVictories(game, match),
       totalDraws: this.TotalDraws(game),
-      totalLosses: this.TotalLosses(game),
+      totalLosses: this.TotalLosses(game, match),
       goalsFavor: score.goalsFavor,
       goalsOwn: score.goalsOwn,
       goalsBalance: score.goalsBalance,
@@ -25,12 +25,16 @@ export default class CreateLeaderboard {
     return board;
   }
 
-  static TotalLosses = (game: IMatches[]) => {
-    const result = game.reduce((acc: number, curr: IMatches) => {
+  static TotalLosses = (game: IMatches[], match: IResult) => {
+    const resultHome = game.reduce((acc: number, curr: IMatches) => {
       if (curr.homeTeamGoals < curr.awayTeamGoals) return acc + 1;
       return acc + 0;
     }, 0);
-    return result;
+    const resultAway = game.reduce((acc: number, curr: IMatches) => {
+      if (curr.homeTeamGoals > curr.awayTeamGoals) return acc + 1;
+      return acc + 0;
+    }, 0);
+    return match.homeGame ? resultHome : resultAway;
   };
 
   static TotalDraws = (game: IMatches[]) => {
@@ -41,21 +45,30 @@ export default class CreateLeaderboard {
     return result;
   };
 
-  static TotalVictories = (game: IMatches[]) => {
-    const result = game.reduce((acc: number, curr: IMatches) => {
+  static TotalVictories = (game: IMatches[], match: IResult) => {
+    const resultHome = game.reduce((acc: number, curr: IMatches) => {
       if (curr.homeTeamGoals > curr.awayTeamGoals) return acc + 1;
       return acc + 0;
     }, 0);
-    return result;
+    const resulAway = game.reduce((acc: number, curr: IMatches) => {
+      if (curr.homeTeamGoals < curr.awayTeamGoals) return acc + 1;
+      return acc + 0;
+    }, 0);
+    return match.homeGame ? resultHome : resulAway;
   };
 
-  static TotalPoints = (game: IMatches[]) => {
-    const result = game.reduce((acc: number, curr: IMatches) => {
+  static TotalPoints = (game: IMatches[], match: IResult) => {
+    const resultHome = game.reduce((acc: number, curr: IMatches) => {
       if (curr.homeTeamGoals > curr.awayTeamGoals) return acc + 3;
       if (curr.homeTeamGoals === curr.awayTeamGoals) return acc + 1;
       return acc + 0;
     }, 0);
-    return result;
+    const resultAway = game.reduce((acc: number, curr: IMatches) => {
+      if (curr.homeTeamGoals < curr.awayTeamGoals) return acc + 3;
+      if (curr.homeTeamGoals === curr.awayTeamGoals) return acc + 1;
+      return acc + 0;
+    }, 0);
+    return match.homeGame ? resultHome : resultAway;
   };
 
   static TotalEfficiency = (points: number, games: number) => {
@@ -63,12 +76,16 @@ export default class CreateLeaderboard {
     return result;
   };
 
-  static TotalScore = (game: IMatches[]) => {
+  static TotalScore = (game: IMatches[], match: IResult) => {
     const goalsFavor:
-    number = game.reduce((acc: number, curr: IMatches) => acc + curr.homeTeamGoals, 0);
+    number = match.homeGame
+      ? game.reduce((acc: number, curr: IMatches) => acc + curr.homeTeamGoals, 0)
+      : game.reduce((acc: number, curr: IMatches) => acc + curr.awayTeamGoals, 0);
 
     const goalsOwn:
-    number = game.reduce((acc: number, curr: IMatches) => acc + curr.awayTeamGoals, 0);
+    number = match.awayGame
+      ? game.reduce((acc: number, curr: IMatches) => acc + curr.homeTeamGoals, 0)
+      : game.reduce((acc: number, curr: IMatches) => acc + curr.awayTeamGoals, 0);
 
     const goalsBalance: number = goalsFavor - goalsOwn;
 

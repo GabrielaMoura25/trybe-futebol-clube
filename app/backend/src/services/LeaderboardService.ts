@@ -1,22 +1,56 @@
 import CreateLeaderboard from '../utils/Leaderboard';
-import LeaderboardModel from '../model/LeaderboardModel';
-import ILeaderboard from '../interfaces/ILeaderboard';
-
-type output = { code: number, message?: string, board?: ILeaderboard[] };
+import Matches from '../database/models/Match';
+import Teams from '../database/models/Team';
+import { IResult } from '../interfaces/ILeaderboard';
+import FullLeaderboard from '../utils/LeaderboardFull';
 
 export default class LeaderboardService {
   constructor(
-    private _model = new LeaderboardModel(),
+    private _modelMatches = Matches,
+    private _modelTeam = Teams,
     private _leaderboard = new CreateLeaderboard(),
   ) {}
 
-  getAll = async (accordingTo: string): Promise<output> => {
-    const matches = await this._model.getAll(accordingTo);
+  getHomeLeaderboard = async () => {
+    const homeMatches = await this._modelTeam.findAll({
+      include: [
+        {
+          model: this._modelMatches,
+          as: 'homeGame',
+          attributes: { exclude: ['id', 'inProgress'] },
+          where: { inProgress: false },
+        },
+      ],
+    }) as unknown as IResult[];
+    const result = this._leaderboard.getLeaderboard(homeMatches);
 
-    if (!matches) return { code: 401, message: 'Bad request' };
+    return { code: 200, result };
+  };
 
-    const board = this._leaderboard.getLeaderboard(matches);
+  getAwayLeaderboard = async () => {
+    const awayMatches = await this._modelTeam.findAll({
+      include: [
+        {
+          model: this._modelMatches,
+          as: 'awayGame',
+          attributes: { exclude: ['id', 'inProgress'] },
+          where: { inProgress: false },
+        },
+      ],
+    }) as unknown as IResult[];
+    const result = this._leaderboard.getLeaderboard(awayMatches);
 
-    return { code: 200, board };
+    return { code: 200, result };
+  };
+
+  getAll = async () => {
+    const { result: home } = await this.getHomeLeaderboard();
+    const { result: away } = await this.getAwayLeaderboard();
+
+    const full = new FullLeaderboard(home, away);
+
+    const result = full.createFullLeaderboard();
+
+    return { code: 200, result };
   };
 }

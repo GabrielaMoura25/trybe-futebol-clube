@@ -5,8 +5,8 @@ const router = Router();
 
 const controller = new LeaderboardController();
 
-router.get('/home', controller.getAllTeamHome.bind(controller));
-router.get('/away', controller.getAllTeamAway.bind(controller));
-router.get('/', controller.getAllTeamHome.bind(controller));
+router.get('/home', controller.getHomeLeaderboard.bind(controller));
+router.get('/away', controller.getAwayLeaderboard.bind(controller));
+router.get('/', controller.getAll.bind(controller));
 
 export default router;

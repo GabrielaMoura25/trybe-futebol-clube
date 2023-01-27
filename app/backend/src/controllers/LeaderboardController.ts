@@ -4,21 +4,21 @@ import LeaderboardService from '../services/LeaderboardService';
 export default class LeaderboardController {
   constructor(private _service = new LeaderboardService()) {}
 
-  getAllTeamHome: RequestHandler = async (_req, res) => {
-    const accordingTo = 'homeGame';
-    const { code, message, board } = await this._service.getAll(accordingTo);
-    if (board) {
-      return res.status(code).json(board);
-    }
-    return res.status(code).json({ message });
+  getHomeLeaderboard: RequestHandler = async (_req, res) => {
+    const { code, result } = await this._service.getHomeLeaderboard();
+
+    return res.status(code).json(result);
   };
 
-  getAllTeamAway: RequestHandler = async (_req, res) => {
-    const accordingTo = 'awayGame';
-    const { code, message, board } = await this._service.getAll(accordingTo);
-    if (board) {
-      return res.status(code).json(board);
-    }
-    return res.status(code).json({ message });
+  getAwayLeaderboard: RequestHandler = async (_req, res) => {
+    const { code, result } = await this._service.getAwayLeaderboard();
+
+    return res.status(code).json(result);
+  };
+
+  getAll: RequestHandler = async (_req, res) => {
+    const { code, result } = await this._service.getAll();
+
+    return res.status(code).json(result);
   };
 }

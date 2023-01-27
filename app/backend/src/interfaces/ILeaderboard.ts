@@ -1,4 +1,4 @@
-import { IMatch } from './IMatches';
+// import IMatches from './IMatches';
 import ITeams from './ITeam';
 
 export default interface ILeaderboard {
@@ -15,6 +15,12 @@ export default interface ILeaderboard {
 }
 
 export interface IResult extends ITeams {
-  homeGame?: IMatch[];
-  awayGame?: IMatch[];
+  homeGame: {
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+  }[];
+  awayGame: {
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+  }[];
 }
