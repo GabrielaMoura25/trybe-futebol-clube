@@ -23,7 +23,7 @@ export default class MatchController {
   matchOver = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { code, message } = await this._service.matchOver(id);
-    return res.status(code).json(message);
+    return res.status(code).json({ message });
   };
 
   update = async (req: Request, res: Response) => {
