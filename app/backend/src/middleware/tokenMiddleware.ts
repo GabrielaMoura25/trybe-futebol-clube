@@ -4,7 +4,7 @@ import TokenConfig from '../utils/TokenConfig';
 const tokenMiddleware: RequestHandler = async (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(404).json({ message: 'token not found' });
+    return res.status(404).json({ message: 'Token not found' });
   }
   try {
     const token = TokenConfig.verifyToken(authorization);
