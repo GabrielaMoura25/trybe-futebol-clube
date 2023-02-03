@@ -89,7 +89,7 @@ Navegue até a raíz do projeto.
     
 </details>
 
-![Captura de tela de 2023-03-02 14-25-47](https://github.com/tryber/sd-023-b-trybe-futebol-clube/blob/main/assets/front-example.png)
+![Captura de tela de 2023-03-02 14-25-47](https://raw.githubusercontent.com/tryber/sd-023-b-trybe-futebol-clube/main/assets/front-example.png?token=GHSAT0AAAAAAB5L6VZS2KZPP5PCB2JXAV7WY65K3TQ)
 
 
 ---
