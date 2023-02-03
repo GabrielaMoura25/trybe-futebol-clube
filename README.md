@@ -89,7 +89,7 @@ Navegue até a raíz do projeto.
     
 </details>
 
-![Captura de tela de 2023-03-02 14-25-47](http://home/gabrielamoura/Imagens/Captura%20de%20tela%20de%202023-02-03%2014-25-47.png)
+![Captura de tela de 2023-03-02 14-25-47](https://user-images.githubusercontent.com/98956659/205527529-84b01a9f-812f-49fd-a48c-0a12e172b633.png)
 
 
 ---
